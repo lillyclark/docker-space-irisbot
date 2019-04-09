@@ -4,7 +4,10 @@ import rospy
 from std_msgs.msg import Bool, String
 from irisbot.msg import Pose, RotateCmd, DriveCmd
 import sys
-sys.path.append('/home/lilly/Desktop/DockerSpace')
+import os
+pathname = os.environ['HOME']+'/Desktop/DockerSpace'
+print(pathname)
+sys.path.append(pathname)
 
 try:
     import m3pi

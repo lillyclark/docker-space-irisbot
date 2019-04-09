@@ -1,4 +1,0 @@
-int32[] ids
----
-NodeLoc[] anchors
-float32[] dists

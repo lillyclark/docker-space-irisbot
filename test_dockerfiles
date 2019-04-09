@@ -1,5 +1,20 @@
+FROM ros:kinetic-ros-base-xenial
+
+WORKDIR /home/lilly/Desktop/DockerSpace
+
+COPY ./ .
+COPY ../irisbot_ROS .
+
+RUN apt-get update && apt-get install -y \
+    ros-kinetic-ros-base=1.3.2-0* \
+    && rm -rf /var/lib/apt/lists/*
+
+# CMD ./container_boot.sh
+
 # docker build -t irisbot_ros .
 # docker run -it --rm --name bot irisbot_ros
+
+############ original rpi docker
 
 FROM jbrisbin/rpi-python3
 USER root
@@ -11,6 +26,33 @@ RUN apt-get install rpi.gpio python3-serial
 RUN pip3 install httpserver numpy
 RUN git config --global user.name "anrggithub-official"
 RUN git config --global user.email "code@anrg.usc.edu"
+
+ARG riot_app=hello-world
+ARG irisbot_app=helloworld
+ARG app_params=None
+ARG riot_branch=master
+ARG irisbot_branch=master
+ARG flash_openmote=f
+ARG target=native
+
+ENV RIOT_APP $riot_app
+ENV RIOT_BRANCH $riot_branch
+ENV IRISBOT_APP $irisbot_app
+ENV IRISBOT_BRANCH $irisbot_branch
+ENV FLASH_OPENMOTE $flash_openmote
+ENV APP_PARAMS $app_params
+ENV HOME_DIR /usr/src
+ENV TARGET $target
+
+EXPOSE 8080
+
+COPY . .
+
+################## roscore from ubuntu
+
+# This is an auto generated Dockerfile for ros:ros-core
+# generated from docker_images/create_ros_core_image.Dockerfile.em
+FROM ubuntu:xenial
 
 # install packages
 RUN apt-get update && apt-get install -q -y \
@@ -46,26 +88,8 @@ RUN apt-get update && apt-get install -y \
     ros-kinetic-ros-core=1.3.2-0* \
     && rm -rf /var/lib/apt/lists/*
 
-ARG riot_app=hello-world
-ARG irisbot_app=helloworld
-ARG app_params=None
-ARG riot_branch=master
-ARG irisbot_branch=master
-ARG flash_openmote=f
-ARG target=native
-
-ENV RIOT_APP $riot_app
-ENV RIOT_BRANCH $riot_branch
-ENV IRISBOT_APP $irisbot_app
-ENV IRISBOT_BRANCH $irisbot_branch
-ENV FLASH_OPENMOTE $flash_openmote
-ENV APP_PARAMS $app_params
-ENV HOME_DIR /usr/src
-ENV TARGET $target
-
-EXPOSE 8080
-
-COPY . .
+# setup entrypoint
+COPY ./ros_entrypoint.sh /
 
 ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["bash"]
