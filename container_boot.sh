@@ -7,10 +7,10 @@ fi
 
 echo "Building irisbot"
 cd irisbot_ROS
-rm -rf build
+# rm -rf build
 catkin_make
 cd ../
-bash launch_ROS.sh
+bash ${HOME_DIR}/launch_ROS.sh
 
 echo "Starting core"
 python3 ${HOME_DIR}/irisbot-python/core.py

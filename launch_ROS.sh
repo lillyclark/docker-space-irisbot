@@ -1,11 +1,11 @@
 #!/bin/sh
-if bash kill_ROS.sh; then
+if bash ${HOME_DIR}/src/kill_ROS.sh; then
     sleep 2
-    . irisbot_ROS/devel/setup.bash
+    . ${HOME_DIR}/iris-ROS/devel/setup.bash
     echo "Launching irisbot.launch"
-    roslaunch --pid=/tmp/launch.pid irisbot irisbot.launch role:="anchor"
+    roslaunch --pid=/tmp/launch.pid irisbot irisbot.launch role:=${APP_PARAMS}
 else
-    . irisbot_ROS/devel/setup.bash
+    . ${HOME_DIR}/iris-ROS/devel/setup.bash
     echo "Launching irisbot.launch"
-    roslaunch --pid=/tmp/launch.pid irisbot irisbot.launch role:="anchor"
+    roslaunch --pid=/tmp/launch.pid irisbot irisbot.launch role:=${APP_PARAMS}
 fi
